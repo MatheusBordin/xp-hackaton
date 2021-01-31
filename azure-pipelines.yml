@@ -29,26 +29,6 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - task: DockerCompose@0
-      displayName: Build Compose
-      inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscription: 'dam.net.br'
-        azureContainerRegistry: '{"loginServer":"hackatonxp.azurecr.io", "id" : "/subscriptions/04dbf35c-4319-44cd-bdf2-34bfd7e93816/resourceGroups/hackaton-xp/providers/Microsoft.ContainerRegistry/registries/hackatonxp"}'
-        dockerComposeFile: '**/docker-compose.yml'
-        action: 'Build services'
-        additionalImageTags: '$(tag)'
-        includeLatestTag: true
-    - task: DockerCompose@0
-      displayName: Push Compose
-      inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscription: 'dam.net.br'
-        azureContainerRegistry: '{"loginServer":"hackatonxp.azurecr.io", "id" : "/subscriptions/04dbf35c-4319-44cd-bdf2-34bfd7e93816/resourceGroups/hackaton-xp/providers/Microsoft.ContainerRegistry/registries/hackatonxp"}'
-        dockerComposeFile: '**/docker-compose.yml'
-        action: 'Push services'
-        additionalImageTags: '$(tag)'
-        includeLatestTag: true
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
@@ -58,4 +38,33 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-          latest
+
+- stage: Deploy
+  displayName: Deploy conteiner to ACI
+  jobs:
+    - deployment:
+      environment: 'Hackaton XP'
+      displayName: Deploy conteiner to ACI
+      workspace:
+        clean: all
+      strategy:
+        runOnce:
+          deploy:
+            pool:
+              vmImage: $(vmImageName)
+            steps:
+              - task: AzureCLI@2
+                inputs:
+                  azureSubscription: 'dam.net.br'
+                  scriptType: 'pscore'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: |
+                    try {
+                      $hackatonxp = $(az container show --name hackatonxp --resource-group hackaton-xp | ConvertFrom-JSON)
+                      if($null -neq $hackatonxp) {
+                        az container delete --name hackatonxp --resource-group hackaton-xp --yes
+                    } catch {
+                      Write-Host "##[info]Cointeiner not found."
+                    }
+
+                    az container create --name hackatonxp --resource-group hackaton-xp --image hackatonxp.azurecr.io/hackatonxp:$(Build.BuildId) --cpu 1 --memory 1 --registry-login-server hackatonxp --registry-username hackatonxp --registry-password o6M2ceEKkp5=x5nUA5g16l0hXgeASniD --dns-name-label hackatonxp --ports 4001
