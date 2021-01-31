@@ -63,6 +63,7 @@ stages:
                       $hackatonxp = $(az container show --name hackatonxp --resource-group hackaton-xp | ConvertFrom-JSON)
                       if($null -ne $hackatonxp) {
                         az container delete --name hackatonxp --resource-group hackaton-xp --yes
+                      }
                     } catch {
                       Write-Host "##[info]Cointeiner not found."
                     }
