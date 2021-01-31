@@ -1,0 +1,13 @@
+{
+  "include": ["src/"],
+  "exclude": [],
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "experimentalDecorators": true,
+    "outDir": "./dist"
+  }
+}

@@ -1,0 +1,27 @@
+{
+    "root": true,
+    "extends": [
+      "eslint:recommended",
+      "google"
+    ],
+    "env": {
+      "node": true,
+      "mocha": true,
+      "es6": true
+    },
+    "rules": {
+      "object-curly-spacing": "off",
+      "max-len": "off",
+      "no-console": "off",
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "arrow-parens": "off"
+    },
+    "parserOptions": {
+      "ecmaVersion": 8,
+      "sourceType": "module"
+    }
+  }
+  
