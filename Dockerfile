@@ -6,4 +6,4 @@ RUN npm install
 COPY . /usr/src/app
 RUN npm run build
 EXPOSE 4001
-CMD [ "node", "dist/index.js" ]
+CMD [ "node", "dist/main.js" ]
