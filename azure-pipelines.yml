@@ -34,11 +34,11 @@ stages:
           $(tag)
 
 - stage: sDeploy
-  displayName: Deploy conteiner to ACI
+  displayName: Deploy to Conteiner Instance
   jobs:
     - deployment: jDeploy
       environment: 'Hackaton XP'
-      displayName: Deploy conteiner to ACI
+      displayName: Deploy to Conteiner Instance
       workspace:
         clean: all
       strategy:
@@ -48,6 +48,7 @@ stages:
               vmImage: 'ubuntu-latest'
             steps:
               - task: AzureCLI@2
+                displayName: Deploy to Conteiner Instance
                 inputs:
                   azureSubscription: 'dam.net.br'
                   scriptType: 'pscore'
