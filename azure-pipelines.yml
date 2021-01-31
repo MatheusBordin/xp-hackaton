@@ -29,18 +29,20 @@ stages:
       vmImage: $(vmImageName)
     steps:
     - task: DockerCompose@0
+      displayName: Build Compose
       inputs:
         containerregistrytype: 'Azure Container Registry'
-        azureSubscription: 'dam.net.br(04dbf35c-4319-44cd-bdf2-34bfd7e93816)'
+        azureSubscription: 'dam.net.br'
         azureContainerRegistry: '{"loginServer":"hackatonxp.azurecr.io", "id" : "/subscriptions/04dbf35c-4319-44cd-bdf2-34bfd7e93816/resourceGroups/hackaton-xp/providers/Microsoft.ContainerRegistry/registries/hackatonxp"}'
         dockerComposeFile: '**/docker-compose.yml'
         action: 'Build services'
         additionalImageTags: '$(tag)'
         includeLatestTag: true
     - task: DockerCompose@0
+      displayName: Push Compose
       inputs:
         containerregistrytype: 'Azure Container Registry'
-        azureSubscription: 'dam.net.br(04dbf35c-4319-44cd-bdf2-34bfd7e93816)'
+        azureSubscription: 'dam.net.br'
         azureContainerRegistry: '{"loginServer":"hackatonxp.azurecr.io", "id" : "/subscriptions/04dbf35c-4319-44cd-bdf2-34bfd7e93816/resourceGroups/hackaton-xp/providers/Microsoft.ContainerRegistry/registries/hackatonxp"}'
         dockerComposeFile: '**/docker-compose.yml'
         action: 'Push services'
