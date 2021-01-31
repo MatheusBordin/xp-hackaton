@@ -69,4 +69,4 @@ stages:
                       Write-Host "##[info]Cointeiner not found."
                     }
 
-                    az container create --name hackatonxp --resource-group hackaton-xp --image hackatonxp.azurecr.io/hackatonxp:$(Build.BuildId) --cpu 1 --memory 1 --registry-login-server hackatonxp --registry-username hackatonxp --registry-password o6M2ceEKkp5=x5nUA5g16l0hXgeASniD --dns-name-label hackatonxp --ports 4001
+                    az container create --name hackatonxp --resource-group hackaton-xp --image hackatonxp.azurecr.io/hackatonxp:16 --cpu 1 --memory 1 --registry-login-server "hackatonxp.azurecr.io" --registry-username "hackatonxp" --registry-password "o6M2ceEKkp5=x5nUA5g16l0hXgeASniD" --dns-name-label hackatonxp --ports 4001
