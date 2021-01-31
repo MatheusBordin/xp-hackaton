@@ -6,7 +6,7 @@ import { Controller, Post } from "../decorators/http-decorator";
 class EventCollectionController extends HttpController {
     @Post("event")
     public live(req: express.Request, res: express.Response) {
-        console.log(req.query);
+        console.log(req.body);
 
         res.sendStatus(204);
     }
