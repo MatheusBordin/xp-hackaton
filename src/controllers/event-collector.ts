@@ -1,10 +1,10 @@
 import { HttpController } from "../types/http-controller";
 import * as express from "express";
-import { Get, Controller } from "../decorators/http-decorator";
+import { Controller, Post } from "../decorators/http-decorator";
 
 @Controller()
 class EventCollectionController extends HttpController {
-    @Get("event")
+    @Post("event")
     public live(req: express.Request, res: express.Response) {
         console.log(req.query);
 
