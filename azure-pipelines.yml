@@ -54,7 +54,7 @@ stages:
                   scriptLocation: 'inlineScript'
                   inlineScript: |
                     try {
-                      Write-Host "##[command]`$list = $(az container list --resource-group hackaton-xp | ConvertFrom-JSON)"
+                      Write-Host "##[command]`$list = `$(az container list --resource-group hackaton-xp | ConvertFrom-JSON)"
                       $list = $(az container list --resource-group hackaton-xp | ConvertFrom-JSON)
                       Write-Host "##[command]`$hackatonxp = `$list.conteiners | Where-Object { `$_.name -eq `"hackatonxp`" }"
                       $hackatonxp = $list.conteiners | Where-Object { $_.name -eq "hackatonxp" }
