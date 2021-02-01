@@ -1,3 +1,4 @@
 import { Graph } from "redisgraph.js";
+import config from "../../config";
 
-export const graphClient = new Graph("hackaton", "localhost", "6379");
+export const graphClient = new Graph("hackaton", config.REDIS_HOST, config.REDIS_PORT);
