@@ -1,6 +1,6 @@
 import { HttpController } from "../types/http-controller";
 import * as express from "express";
-import { Get, Controller } from "../decorators/http-decorator";
+import { Get, Controller } from "../infra/decorators/http-decorator";
 
 @Controller()
 class HeartbeatController extends HttpController {

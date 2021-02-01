@@ -1,9 +1,9 @@
 import * as express from "express";
 import { RequestHandler } from "express";
 import { HttpMethodDecoratorFactory } from "../helpers/http-method-decorator-factory";
-import { HttpController } from "../types/http-controller";
-import { HttpMethod } from "../types/http-method";
-import { HttpRoute } from "../types/http-route";
+import { HttpController } from "../../types/http-controller";
+import { HttpMethod } from "../../types/http-method";
+import { HttpRoute } from "../../types/http-route";
 
 /**
  * Configure controller routes.

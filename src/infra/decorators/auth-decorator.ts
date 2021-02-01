@@ -1,5 +1,5 @@
 import * as express from "express";
-import { HttpStatus } from "../utils/http-status";
+import { HttpStatus } from "../helpers/http-status";
 
 /**
  * Auth for chat users.

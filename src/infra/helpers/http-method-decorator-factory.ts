@@ -1,6 +1,6 @@
-import { HttpController } from "../types/http-controller";
-import { HttpMethod } from "../types/http-method";
-import { HttpRoute } from "../types/http-route";
+import { HttpController } from "../../types/http-controller";
+import { HttpMethod } from "../../types/http-method";
+import { HttpRoute } from "../../types/http-route";
 
 /**
  * Http method decorator factory.
