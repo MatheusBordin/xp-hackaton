@@ -10,63 +10,62 @@ resources:
 - repo: self
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '0b396ccb-ebd5-45b3-b478-4fbfd314730e'
-  imageRepository: 'hackatonxp'
-  containerRegistry: 'hackatonxp.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
-  
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  - group: hackatonxp
+  - name: tag
+    value: '$(Build.BuildId)'
 
 stages:
-- stage: Build
+- stage: sBuild
   displayName: Build and push stage
   jobs:  
-  - job: Build
-    displayName: Build
+  - job: jBuild
+    displayName: Build and push stage
     pool:
-      vmImage: $(vmImageName)
+      vmImage: 'ubuntu-latest'
     steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+      - task: Docker@2
+        displayName: Build and push an image to container registry
+        inputs:
+          containerRegistry: 'hackatonxp'
+          repository: 'hackatonxp'
+          command: 'buildAndPush'
+          Dockerfile: '**/Dockerfile'
+          tags: '$(tag)'
 
-- stage: Deploy
-  displayName: Deploy conteiner to ACI
+- stage: sDeploy
+  displayName: Deploy to Conteiner Instance
   jobs:
-    - deployment:
+    - deployment: jDeploy
       environment: 'Hackaton XP'
-      displayName: Deploy conteiner to ACI
+      displayName: Deploy to Conteiner Instance
       workspace:
         clean: all
       strategy:
         runOnce:
           deploy:
             pool:
-              vmImage: $(vmImageName)
+              vmImage: 'ubuntu-latest'
             steps:
               - task: AzureCLI@2
+                displayName: Deploy to Conteiner Instance
                 inputs:
                   azureSubscription: 'dam.net.br'
                   scriptType: 'pscore'
                   scriptLocation: 'inlineScript'
                   inlineScript: |
                     try {
+                      Write-Host "##[command]`$list = `$(az container list --resource-group hackaton-xp | ConvertFrom-JSON)"
                       $list = $(az container list --resource-group hackaton-xp | ConvertFrom-JSON)
+                      Write-Host "##[command]`$hackatonxp = `$list.conteiners | Where-Object { `$_.name -eq `"hackatonxp`" }"
                       $hackatonxp = $list.conteiners | Where-Object { $_.name -eq "hackatonxp" }
+                      Write-Host "##[command]if(`$null -ne `$hackatonxp)"
                       if($null -ne $hackatonxp) {
+                        Write-Host "##[command]az container delete --name hackatonxp --resource-group hackaton-xp --yes"
                         az container delete --name hackatonxp --resource-group hackaton-xp --yes
                       }
                     } catch {
                       Write-Host "##[info]Cointeiner not found."
                     }
 
-                    az container create --name hackatonxp --resource-group hackaton-xp --image hackatonxp.azurecr.io/hackatonxp:16 --cpu 1 --memory 1 --registry-login-server "hackatonxp.azurecr.io" --registry-username "hackatonxp" --registry-password "o6M2ceEKkp5=x5nUA5g16l0hXgeASniD" --dns-name-label hackatonxp --ports 4001
+                    Write-Host "##[command]az container create --name hackatonxp --resource-group hackaton-xp --image hackatonxp.azurecr.io/hackatonxp:`$(tag) --cpu 1 --memory 1 --registry-login-server `"hackatonxp.azurecr.io`" --registry-username `"hackatonxp`" --registry-password `$(RegistryPassword) --dns-name-label hackatonxp --ports 4001"
+                    az container create --name hackatonxp --resource-group hackaton-xp --image hackatonxp.azurecr.io/hackatonxp:$(tag) --cpu 1 --memory 1 --registry-login-server "hackatonxp.azurecr.io" --registry-username "hackatonxp" --registry-password $(RegistryPassword) --dns-name-label hackatonxp --ports 4001
