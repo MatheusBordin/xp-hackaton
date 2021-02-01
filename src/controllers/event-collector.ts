@@ -37,6 +37,17 @@ class EventCollectionController extends HttpController {
             res.status(500).send(e);
         }
     }
+
+    @Get("issue/:id")
+    public async three(req: express.Request, res: express.Response) {
+        try {
+            const entity = await eventAggregationService.findThreeByRootId(parseInt(req.params.id, 10));
+            return res.json(entity);
+        } catch (e) {
+            console.log(e);
+            res.status(500).send(e);
+        }
+    }
 }
 
 const controller = new EventCollectionController();

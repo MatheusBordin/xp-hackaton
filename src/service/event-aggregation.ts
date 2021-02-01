@@ -50,9 +50,7 @@ export class EventAggregationService {
     public async listThrees() {
         const listOfRoots = await alertEventRepository.findRoots();
 
-        return Promise.all(
-            listOfRoots.map(x => this.findThreeByRootId(x.id))
-        );
+        return listOfRoots;
     }
 }
 
