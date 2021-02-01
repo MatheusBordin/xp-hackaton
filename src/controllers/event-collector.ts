@@ -18,7 +18,6 @@ class EventCollectionController extends HttpController {
             if (entity != null) {
                 return res.json(entity);
             }
-            // await communicationService.sendToTeams(data);
 
             res.sendStatus(204);
         } catch (e) {

@@ -2,6 +2,7 @@ import * as _ from "lodash";
 import { GraphNode } from "../entities/node";
 import { AlertEvent } from "../models/alert-event";
 import alertEventRepository from "../repositories/alert-event";
+import communicationService from "./communication";
 import serviceMeshService from "./service-mesh";
 
 export class EventAggregationService {
@@ -12,9 +13,13 @@ export class EventAggregationService {
         if (!relatedEvent) {
             const id = await alertEventRepository.insert(event);
             list = await this.findRelationshipsById(id);
+
+            await communicationService.sendRootEvent(event, id);
         } else {
             await alertEventRepository.insertRelationship(relatedEvent.id, event);
             list = await this.findRelationshipsById(relatedEvent.id);
+
+            await communicationService.sendRelatedEvent(relatedEvent, event);
         }
 
         return list;
